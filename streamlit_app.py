@@ -3,38 +3,36 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-"""
-# Welcome to Streamlit!
+import altair as alt
+import numpy as np
+import pandas as pd
+import streamlit as st
+import streamlit as st
+import altair as alt
+import numpy as np
+import pandas as pd
+st.set_page_config(page_title="Are you ready for retirement?", page_icon="💰", layout="wide")
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+st.title("Welcome to an app the estimates your retirement age")
+st.write("Lets find out if your actual retirement age matches your ideal")
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+st.text_input("Age","Input your present age")
+option = st.selectbox("What is your current housing type?",["2-room","3-room","4-room","5-room","Executive HDB","Executive condomimium","Terrace","Semi-detached house","Bungalow","Others"])
+QOL = st.slider("On a scale of 1-10, rate your quality of life?",0,10,5)
+if QOL >=7:
+    st.write("You're lving life!")
+elif QOL>=5:
+    st.write("Life can be better")
+else: 
+    st.write("Life is not looking good,we will try out best to help")
 
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
 
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
+income = st.number_input("Enter your yearly income:")
+expenditure = st.number_input("Enter your yearly expenditure:")
 
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
-
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
-
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
+if st.button("Calculate"):
+    savings = income - expenditure 
+    if savings > 0:
+        st.success(f"You are saving {savings} units per month.")
+    else:
+        st.error("Your yearly expenditure exceeds your yearly income. This will increase your retirement age")
